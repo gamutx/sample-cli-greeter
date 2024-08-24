@@ -1,0 +1,58 @@
+name: Build and Package
+
+on: [push, pull_request]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install --upgrade setuptools wheel
+      - name: Build package
+        run: python setup.py sdist bdist_wheel --dist-dir=build_output/windows
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-build
+          path: build_output/windows
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install --upgrade setuptools wheel
+      - name: Build package
+        run: python setup.py sdist bdist_wheel --dist-dir=build_output/macos
+      - name: Upload macOS build
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos-build
+          path: build_output/macos
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install --upgrade setuptools wheel
+      - name: Build package
+        run: python setup.py sdist bdist_wheel --dist-dir=build_output/linux
+      - name: Upload Linux build
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-build
+          path: build_output/linux
